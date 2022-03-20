@@ -85,7 +85,7 @@ router.put('/:id', async (req, res, next) => {
 router.delete('/:id', async (req, res, next) => {
   if (req.params.id === req.body.userId) {
     try {
-      const user = await User.findByIdAndDelete(req.params.id);
+      await User.findByIdAndDelete(req.params.id);
       res.status(204).json('Account has been deleted!');
     } catch (error) {
       res.status(404).json('Not Found!');

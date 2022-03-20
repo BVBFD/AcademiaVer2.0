@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import cors from 'cors';
 import usersRouter from './routes/usersRouter.js';
+import postsRouter from './routes/postsRouter.js';
 
 dotenv.config();
 
@@ -21,6 +22,16 @@ app.get('/api/test', (req, res, next) => {
 });
 
 app.use('/api/users', usersRouter);
+app.use('/api/posts', postsRouter);
+
+app.use((req, res, next, error) => {
+  res.status(404).json('Not Found!');
+});
+
+app.use((req, res, next, error) => {
+  console.log(error);
+  res.status(500).json(error);
+});
 
 mongoose.connect(process.env.MONGO_DB_URL, () => {
   console.log('MONGO_DB has been connected!');
