@@ -44,4 +44,55 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
+// update user data
+router.put('/:id', async (req, res, next) => {
+  if (req.params.id === req.body.userId) {
+    // password update
+    if (req.body.password) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(req.body.password, salt);
+      const foundUser = await User.findByIdAndUpdate(
+        req.params.id,
+        { password: hashedPassword },
+        {
+          returnOriginal: false,
+        }
+      );
+      const { password, ...user } = foundUser._doc;
+      res.status(200).json(user);
+    } else {
+      try {
+        // other datas update other than password
+        const foundUser = await User.findByIdAndUpdate(
+          req.params.id,
+          req.body,
+          {
+            returnOriginal: false,
+          }
+        );
+        const { password, ...user } = foundUser._doc;
+        res.status(200).json(user);
+      } catch (error) {
+        res.status(404).json('Not found!');
+      }
+    }
+  } else {
+    res.status(400).json('Bad Requests!');
+  }
+});
+
+// delete user data
+router.delete('/:id', async (req, res, next) => {
+  if (req.params.id === req.body.userId) {
+    try {
+      const user = await User.findByIdAndDelete(req.params.id);
+      res.status(204).json('Account has been deleted!');
+    } catch (error) {
+      res.status(404).json('Not Found!');
+    }
+  } else {
+    res.status(400).json('Bad Requests!');
+  }
+});
+
 export default router;
