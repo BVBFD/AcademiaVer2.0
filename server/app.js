@@ -7,6 +7,8 @@ import morgan from 'morgan';
 import cors from 'cors';
 import usersRouter from './routes/usersRouter.js';
 import postsRouter from './routes/postsRouter.js';
+import conversationsRouter from './routes/conversationsRouter.js';
+import messagesRouter from './routes/messagesRouter.js';
 
 dotenv.config();
 
@@ -23,6 +25,8 @@ app.get('/api/test', (req, res, next) => {
 
 app.use('/api/users', usersRouter);
 app.use('/api/posts', postsRouter);
+app.use('/api/convs', conversationsRouter);
+app.use('/api/messages', messagesRouter);
 
 app.use((req, res, next, error) => {
   res.status(404).json('Not Found!');
