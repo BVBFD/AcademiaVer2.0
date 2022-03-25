@@ -3,7 +3,7 @@ import styles from './Feed.module.css';
 
 const Feed = (props) => {
   return (
-    <div>
+    <div className={styles.feed}>
       <span>Feed</span>
     </div>
   );
