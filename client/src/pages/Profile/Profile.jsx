@@ -1,11 +1,44 @@
 import React from 'react';
 import styles from './Profile.module.css';
+import Topbar from '../../components/Topbar/Topbar.jsx';
+import Sidebar from '../../components/Sidebar/Sidebar.jsx';
+import Feed from '../../components/Feed/Feed.jsx';
+import Rightbar from '../../components/Rightbar/Rightbar.jsx';
 
 const Profile = (props) => {
   return (
-    <div>
-      <span>Profile</span>
-    </div>
+    <>
+      <Topbar />
+      <div className={styles.profile}>
+        <Sidebar />
+        <div className={styles.profileRight}>
+          <div className={styles.profileRightTop}>
+            <div className={styles.profileCover}>
+              <img
+                className={styles.profileCoverImg}
+                src='../images/person/noCover.png'
+                crossOrigin='anonymous'
+              />
+              <img
+                className={styles.profileUserImg}
+                src='../images/person/noAvatar.png'
+                crossOrigin='anonymous'
+              />
+            </div>
+            <div className={styles.profileInfo}>
+              <h4 className={styles.profileInfoName}>Lee Seong Eun</h4>
+              <span className={styles.profileInfoDesc}>
+                Hello My name is Seong Eun Lee
+              </span>
+            </div>
+          </div>
+          <div className={styles.profileRightBottom}>
+            <Feed />
+            <Rightbar />
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
