@@ -7,9 +7,11 @@ const Feed = ({ httpService }) => {
 
   useEffect(() => {
     const getPost = async () => {
-      const datas = await httpService.fetch(`api/posts`, {
+      const res = await httpService.fetch(`api/posts`, {
         method: 'GET',
       });
+
+      const datas = await res.json();
       setDatas(datas);
     };
 

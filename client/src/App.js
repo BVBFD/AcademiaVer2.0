@@ -11,7 +11,7 @@ const App = ({ httpService }) => {
   return (
     <Routes>
       <Route path='/' element={<Home httpService={httpService} />} />
-      <Route path='/login' element={<Login />} />
+      <Route path='/login' element={<Login httpService={httpService} />} />
       <Route path='/signup' element={<SignUp />} />
       <Route path='/profile/:username' element={<Profile />} />
       <Route path='/messenger' element={<Messenger />} />

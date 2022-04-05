@@ -8,9 +8,11 @@ const Post = ({ httpService, data }) => {
 
   useEffect(() => {
     const getUser = async () => {
-      const user = await httpService.fetch(`api/users/${data.userId}`, {
+      const res = await httpService.fetch(`api/users/${data.userId}`, {
         method: 'GET',
       });
+
+      const user = await res.json();
       setUser(user);
     };
 
@@ -18,7 +20,7 @@ const Post = ({ httpService, data }) => {
   }, [data]);
 
   console.log(data);
-  console.log(user.profilePic);
+  console.log(user);
 
   return (
     <div className={styles.post}>
@@ -51,7 +53,7 @@ const Post = ({ httpService, data }) => {
           </div>
           <div className={styles.postBottomRight}>
             <span className={styles.postCommentText}>
-              {data.comment?.length} comments
+              {!data.comment?.length ? 0 : data.comment?.length} comments
             </span>
           </div>
         </div>

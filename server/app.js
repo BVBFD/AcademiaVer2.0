@@ -17,6 +17,7 @@ const app = express();
 app.use(express.json());
 app.use(helmet());
 app.use(morgan('common'));
+
 app.use(cors());
 
 app.get('/api/test', (req, res, next) => {

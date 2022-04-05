@@ -13,8 +13,7 @@ export default class HttpService {
         },
       });
 
-      const data = await res.json();
-      return data;
+      return res;
     } catch (error) {
       console.error(error);
     }
