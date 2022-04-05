@@ -7,10 +7,10 @@ import Messenger from './pages/Messenger/Messenger.jsx';
 import Profile from './pages/Profile/Profile.jsx';
 import SignUp from './pages/SignUp/SignUp.jsx';
 
-const App = (props) => {
+const App = ({ httpService }) => {
   return (
     <Routes>
-      <Route path='/' element={<Home />} />
+      <Route path='/' element={<Home httpService={httpService} />} />
       <Route path='/login' element={<Login />} />
       <Route path='/signup' element={<SignUp />} />
       <Route path='/profile/:username' element={<Profile />} />

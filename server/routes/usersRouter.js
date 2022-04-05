@@ -95,4 +95,14 @@ router.delete('/:id', async (req, res, next) => {
   }
 });
 
+// get user data by id
+router.get('/:id', async (req, res, next) => {
+  try {
+    const foundUser = await User.findById(req.params.id);
+    res.status(200).json(foundUser);
+  } catch (error) {
+    res.status(404).json('Not Found!');
+  }
+});
+
 export default router;

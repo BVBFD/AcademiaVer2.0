@@ -5,13 +5,13 @@ import Sidebar from '../../components/Sidebar/Sidebar.jsx';
 import Feed from '../../components/Feed/Feed.jsx';
 import Rightbar from '../../components/Rightbar/Rightbar.jsx';
 
-const Home = (props) => {
+const Home = ({ httpService }) => {
   return (
     <>
       <Topbar />
       <div className={styles.homeContainer}>
         <Sidebar />
-        <Feed />
+        <Feed httpService={httpService} />
         <Rightbar />
       </div>
     </>
