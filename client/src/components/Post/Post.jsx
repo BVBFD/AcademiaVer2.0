@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { MoreVert } from '@mui/icons-material';
 
 const Post = ({ httpService, data }) => {
-  const [user, setUser] = useState({});
+  const [userData, setUserData] = useState({});
 
   useEffect(() => {
     const getUser = async () => {
@@ -12,25 +12,25 @@ const Post = ({ httpService, data }) => {
         method: 'GET',
       });
 
-      const user = await res.json();
-      setUser(user);
+      const userData = await res.json();
+      setUserData(userData);
     };
 
     getUser();
   }, [data]);
-
-  console.log(data);
-  console.log(user);
 
   return (
     <div className={styles.post}>
       <div className={styles.postWrapper}>
         <div className={styles.postTop}>
           <div className={styles.postTopLeft}>
-            <Link to={`/profile/${user.username}`}>
-              <img className={styles.postProfileImg} src={user.profilePic} />
+            <Link to={`/profile/${userData.username}`}>
+              <img
+                className={styles.postProfileImg}
+                src={userData.profilePic}
+              />
             </Link>
-            <span className={styles.postUsername}>{user.username}</span>
+            <span className={styles.postUsername}>{userData.username}</span>
             <span className={styles.postDate}>
               {new Date(data.createdAt).toDateString()}
             </span>

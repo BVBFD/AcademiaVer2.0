@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styles from './Profile.module.css';
 import Topbar from '../../components/Topbar/Topbar.jsx';
 import Sidebar from '../../components/Sidebar/Sidebar.jsx';
 import Feed from '../../components/Feed/Feed.jsx';
 import Rightbar from '../../components/Rightbar/Rightbar.jsx';
+import { UserContext } from '../../components/Context/Context';
 
-const Profile = (props) => {
+const Profile = ({ httpService }) => {
+  const { user } = useContext(UserContext);
+  console.log(user);
+
   return (
     <>
       <Topbar />
@@ -33,7 +37,7 @@ const Profile = (props) => {
             </div>
           </div>
           <div className={styles.profileRightBottom}>
-            <Feed />
+            {!user ? <Feed /> : <Feed user={user} httpService={httpService} />}
             <Rightbar />
           </div>
         </div>

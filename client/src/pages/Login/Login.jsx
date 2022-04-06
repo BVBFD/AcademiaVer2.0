@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../components/Context/Context';
 import styles from './Login.module.css';
 
 const Login = ({ httpService }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [data, setData] = useState({});
   const navigate = useNavigate();
+  const { dispatch } = useContext(UserContext);
 
   const onLogin = async (e) => {
     e.preventDefault();
+    dispatch({ type: 'LOGIN_START' });
     try {
       const res = await httpService.fetch(`api/users/login`, {
         method: 'POST',
@@ -24,14 +26,13 @@ const Login = ({ httpService }) => {
       }
 
       const data = await res.json();
-      setData(data);
+      dispatch({ type: 'LOGIN_SUCCESS', payload: data });
       navigate('/');
     } catch (error) {
       console.error(error);
+      dispatch({ type: 'LOGIN_FAIL', payload: error });
     }
   };
-
-  console.log(data);
 
   return (
     <div className={styles.login}>
