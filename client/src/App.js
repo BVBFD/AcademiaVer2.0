@@ -12,7 +12,7 @@ const App = ({ httpService }) => {
     <Routes>
       <Route path='/' element={<Home httpService={httpService} />} />
       <Route path='/login' element={<Login httpService={httpService} />} />
-      <Route path='/signup' element={<SignUp />} />
+      <Route path='/signup' element={<SignUp httpService={httpService} />} />
       <Route
         path='/profile/:username'
         element={<Profile httpService={httpService} />}

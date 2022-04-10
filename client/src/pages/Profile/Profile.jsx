@@ -20,12 +20,16 @@ const Profile = ({ httpService }) => {
             <div className={styles.profileCover}>
               <img
                 className={styles.profileCoverImg}
-                src='../images/person/noCover.png'
+                src={
+                  !user.coverPic
+                    ? '../images/person/noCover.png'
+                    : user.coverPic
+                }
                 crossOrigin='anonymous'
               />
               <img
                 className={styles.profileUserImg}
-                src='../images/person/noAvatar.png'
+                src={user.profilePic}
                 crossOrigin='anonymous'
               />
             </div>

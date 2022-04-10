@@ -1,10 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './SignUp.module.css';
 
-const SignUp = (props) => {
-  const handleClick = (e) => {
+const SignUp = ({ httpService }) => {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [pwd, setPwd] = useState('');
+  const [pwdCheck, setPwdCheck] = useState('');
+  const navigate = useNavigate();
+
+  const handleClick = async (e) => {
     e.preventDefault();
-    console.log(e.target.value);
+    if (pwd !== pwdCheck) {
+      return window.alert('비밀번호 불일치!');
+    }
+    try {
+      const res = await httpService.fetch('api/users/signup', {
+        method: 'POST',
+        body: JSON.stringify({
+          username,
+          email,
+          password: pwd,
+        }),
+      });
+
+      await res.json();
+      window.alert('Id 생성 완료!');
+      navigate('/login');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -20,18 +45,21 @@ const SignUp = (props) => {
           <form className={styles.loginBox} onSubmit={handleClick}>
             <input
               placeholder='Username'
+              onChange={(e) => setUsername(e.target.value)}
               required
               className={styles.loginInput}
               type='text'
             />
             <input
               placeholder='Email'
+              onChange={(e) => setEmail(e.target.value)}
               required
               className={styles.loginInput}
               type='email'
             />
             <input
               placeholder='Password'
+              onChange={(e) => setPwd(e.target.value)}
               required
               className={styles.loginInput}
               type='password'
@@ -39,6 +67,7 @@ const SignUp = (props) => {
             />
             <input
               placeholder='Password Again'
+              onChange={(e) => setPwdCheck(e.target.value)}
               required
               className={styles.loginInput}
               type='password'
@@ -46,10 +75,11 @@ const SignUp = (props) => {
             <button className={styles.loginButton} type='submit'>
               Sign Up
             </button>
-            <button className={styles.loginRegisterButton}>
-              Log Into Account
-            </button>
           </form>
+
+          <button className={styles.loginRegisterButton}>
+            Log Into Account
+          </button>
         </div>
       </div>
     </div>

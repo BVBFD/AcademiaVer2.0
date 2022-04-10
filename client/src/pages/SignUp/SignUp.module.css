@@ -71,9 +71,10 @@
   height: 50px;
   border-radius: 10px;
   border: none;
-  background-color: #a8bfff;
   color: white;
   font-size: 20px;
   font-weight: 500;
   cursor: pointer;
+  background-color: #81a2fd;
+  margin-top: 1rem;
 }

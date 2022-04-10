@@ -34,6 +34,10 @@ const Login = ({ httpService }) => {
     }
   };
 
+  const toSignUp = () => {
+    navigate('/signup');
+  };
+
   return (
     <div className={styles.login}>
       <div className={styles.loginWrapper}>
@@ -64,10 +68,10 @@ const Login = ({ httpService }) => {
               Log In
             </button>
             <span className={styles.loginForgot}>Forgot Password</span>
-            <button className={styles.loginRegisterButton}>
-              Create a New Account
-            </button>
           </form>
+          <button className={styles.loginRegisterButton} onClick={toSignUp}>
+            Create a New Account
+          </button>
         </div>
       </div>
     </div>
