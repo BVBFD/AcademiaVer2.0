@@ -1,18 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './Message.module.css';
 
-const Message = (props) => {
+const Message = ({ httpService, message }) => {
+  const [txtUserPic, setTxtUserPic] = useState('');
+
+  useEffect(() => {
+    const getTxtUserPic = async () => {
+      const res = await httpService.fetch(`api/users/${message.senderId}`, {
+        method: 'GET',
+      });
+
+      const data = await res.json();
+      setTxtUserPic(data.profilePic);
+    };
+
+    getTxtUserPic();
+  }, []);
+
   return (
     <div className={styles.message}>
       <div className={styles.messageTop}>
         <img
           className={styles.messageImg}
-          src='../images/person/1.png'
+          src={txtUserPic}
           crossOrigin='anonymous'
         />
-        <p className={styles.messageText}>Hello this is my Text!</p>
+        <p className={styles.messageText}>{message.text}</p>
       </div>
-      <div className={styles.messageBottom}>2022.03.22</div>
+      <div className={styles.messageBottom}>
+        {new Date().toDateString(message.createdAt)}
+      </div>
     </div>
   );
 };

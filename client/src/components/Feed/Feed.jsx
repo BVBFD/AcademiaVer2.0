@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Post from '../Post/Post.jsx';
 import styles from './Feed.module.css';
 
-const Feed = ({ user, httpService }) => {
+const Feed = ({ username, httpService }) => {
+  console.log(username);
   const [datas, setDatas] = useState([]);
   const [userDatas, setUserDatas] = useState([]);
 
@@ -20,19 +21,21 @@ const Feed = ({ user, httpService }) => {
   }, []);
 
   useEffect(() => {
-    const getUserPost = async () => {
-      const res = await httpService.fetch(`api/posts/profile/${user._id}`, {
+    const getUserDatas = async () => {
+      const res = await httpService.fetch(`api/users/profile/${username}`, {
         method: 'GET',
       });
+      const data = await res.json();
 
-      const userDatas = await res.json();
-      setUserDatas(userDatas);
+      const res2 = await httpService.fetch(`api/posts/profile/${data._id}`, {
+        method: 'GET',
+      });
+      const data2 = await res2.json();
+      setUserDatas(data2);
     };
 
-    getUserPost();
-  }, [user]);
-
-  console.log(userDatas);
+    getUserDatas();
+  }, [username]);
 
   const HomeFeed = () => {
     return (
@@ -58,7 +61,7 @@ const Feed = ({ user, httpService }) => {
     );
   };
 
-  return !user ? <HomeFeed /> : <ProfileFeed />;
+  return !username ? <HomeFeed /> : <ProfileFeed />;
 };
 
 export default Feed;

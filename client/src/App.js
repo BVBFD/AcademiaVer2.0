@@ -17,7 +17,10 @@ const App = ({ httpService }) => {
         path='/profile/:username'
         element={<Profile httpService={httpService} />}
       />
-      <Route path='/messenger' element={<Messenger />} />
+      <Route
+        path='/messenger'
+        element={<Messenger httpService={httpService} />}
+      />
     </Routes>
   );
 };

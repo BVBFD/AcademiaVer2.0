@@ -105,4 +105,17 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
+// get user data by username
+router.get('/profile/:username', async (req, res, next) => {
+  try {
+    const foundUser = await User.findOne({
+      username: req.params.username,
+    });
+    console.log(foundUser);
+    res.status(200).json(foundUser);
+  } catch (error) {
+    res.status(404).json('Not Found!');
+  }
+});
+
 export default router;

@@ -20,7 +20,7 @@ router.post('/', async (req, res, next) => {
 // get conv of user
 router.get('/:patnerId', async (req, res, next) => {
   try {
-    const foundConv = await Conversation.findOne({
+    const foundConv = await Conversation.find({
       members: { $in: [req.params.patnerId] },
     });
     res.status(200).json(foundConv);

@@ -1,11 +1,41 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Topbar from '../../components/Topbar/Topbar';
 import Conversation from '../../components/Conversation/Conversation';
 import Message from '../../components/Message/Message';
-import ChatOnline from '../../components/ChatOnline/ChatOnline';
 import styles from './Messenger.module.css';
 
-const Messenger = (props) => {
+const Messenger = ({ httpService }) => {
+  const [convPartnerId, setConvPartnerId] = useState('');
+  const [convId, setConvId] = useState('');
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    const getConv = async () => {
+      const res = await httpService.fetch(`api/convs/${convPartnerId}`, {
+        method: 'GET',
+      });
+      const data = await res.json();
+      setConvId(data[0]._id);
+    };
+
+    getConv();
+  }, [convPartnerId]);
+
+  useEffect(() => {
+    const getMessages = async () => {
+      const res = await httpService.fetch(`api/messages/${convId}`, {
+        method: 'GET',
+      });
+
+      const data = await res.json();
+      setMessages(data);
+    };
+
+    getMessages();
+  }, [convId]);
+
+  console.log(messages);
+
   return (
     <>
       <Topbar />
@@ -17,7 +47,10 @@ const Messenger = (props) => {
               className={styles.chatMenuInput}
             />
             <div>
-              <Conversation />
+              <Conversation
+                httpService={httpService}
+                setConvPartnerId={setConvPartnerId}
+              />
             </div>
           </div>
         </div>
@@ -26,7 +59,9 @@ const Messenger = (props) => {
           <div className={styles.chatBoxWrapper}>
             <div className={styles.chatBoxTop}>
               <div>
-                <Message />
+                {messages.map((message) => (
+                  <Message httpService={httpService} message={message} />
+                ))}
               </div>
             </div>
             <div className={styles.chatBoxBottom}>
@@ -36,12 +71,6 @@ const Messenger = (props) => {
               ></textarea>
               <button className={styles.chatSubmitButton}>Send</button>
             </div>
-          </div>
-        </div>
-
-        <div className={styles.chatOnline}>
-          <div className={styles.chatOnlineWrapper}>
-            <ChatOnline />
           </div>
         </div>
       </div>

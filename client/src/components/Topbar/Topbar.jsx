@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import styles from './Topbar.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import PersonIcon from '@mui/icons-material/Person';
 import ChatIcon from '@mui/icons-material/Chat';
@@ -50,7 +50,12 @@ const Topbar = (props) => {
             <span className={styles.topbarIconBadge}>1</span>
           </div>
         </div>
-        <Link to={`/profile/:username`}>
+        <Link
+          to={`/profile/${user.username}`}
+          onClick={() => {
+            window.location.replace(`/profile/${user.username}`);
+          }}
+        >
           <img className={styles.topbarImg} src={user.profilePic} />
         </Link>
       </div>

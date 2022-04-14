@@ -1,14 +1,27 @@
-import React, { useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './Profile.module.css';
 import Topbar from '../../components/Topbar/Topbar.jsx';
 import Sidebar from '../../components/Sidebar/Sidebar.jsx';
 import Feed from '../../components/Feed/Feed.jsx';
 import Rightbar from '../../components/Rightbar/Rightbar.jsx';
-import { UserContext } from '../../components/Context/Context';
+import { useParams } from 'react-router-dom';
 
 const Profile = ({ httpService }) => {
-  const { user } = useContext(UserContext);
-  console.log(user);
+  const username = useParams().username;
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const getUser = async () => {
+      const res = await httpService.fetch(`api/users/profile/${username}`, {
+        method: 'GET',
+      });
+      const data = await res.json();
+
+      setUser(data);
+    };
+
+    getUser();
+  }, []);
 
   return (
     <>
@@ -34,15 +47,16 @@ const Profile = ({ httpService }) => {
               />
             </div>
             <div className={styles.profileInfo}>
-              <h4 className={styles.profileInfoName}>Lee Seong Eun</h4>
-              <span className={styles.profileInfoDesc}>
-                Hello My name is Seong Eun Lee
-              </span>
+              <h4 className={styles.profileInfoName}>{user.username}</h4>
+              <span className={styles.profileInfoDesc}>{user?.desc}</span>
             </div>
           </div>
           <div className={styles.profileRightBottom}>
-            {!user ? <Feed /> : <Feed user={user} httpService={httpService} />}
+            <Feed httpService={httpService} username={username} />
             <Rightbar />
+            {/* props 넘길때 주의 사항!! */}
+            {/* 초기값이 null이거나 undefined 일 경우 그 값 그대로 넘어가 렌더링 되기 때문에 */}
+            {/* 가급적 초기값이 확실한것을 props로 넘겨서 초기부터 렌더링 되게 하자!! */}
           </div>
         </div>
       </div>
