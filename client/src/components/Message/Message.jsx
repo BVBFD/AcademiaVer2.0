@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Message.module.css';
 
-const Message = ({ httpService, message }) => {
+const Message = ({ httpService, message, messages, setMessages }) => {
   const [txtUserPic, setTxtUserPic] = useState('');
 
   useEffect(() => {
@@ -17,6 +17,24 @@ const Message = ({ httpService, message }) => {
     getTxtUserPic();
   }, []);
 
+  const removeMessage = async () => {
+    try {
+      const res = await httpService.fetch(
+        `api/messages/remove/${message._id}`,
+        {
+          method: 'DELETE',
+        }
+      );
+      const data = await res.json();
+      const newMessagesAfterDelete = messages.filter(
+        (message) => message._id !== data._id
+      );
+      setMessages(newMessagesAfterDelete);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className={styles.message}>
       <div className={styles.messageTop}>
@@ -25,7 +43,10 @@ const Message = ({ httpService, message }) => {
           src={txtUserPic}
           crossOrigin='anonymous'
         />
-        <p className={styles.messageText}>{message.text}</p>
+        <p className={styles.messageText}>
+          {message.text}
+          <span onClick={removeMessage}>x</span>
+        </p>
       </div>
       <div className={styles.messageBottom}>
         {new Date().toDateString(message.createdAt)}

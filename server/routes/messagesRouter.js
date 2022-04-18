@@ -15,6 +15,17 @@ router.post('/', async (req, res, next) => {
   }
 });
 
+// remove a message
+router.delete('/remove/:messageId', async (req, res, next) => {
+  try {
+    const foundMessage = await Message.findById(req.params.messageId);
+    res.status(200).json(foundMessage);
+    foundMessage.delete();
+  } catch (error) {
+    res.status(400).json('Bad Request!');
+  }
+});
+
 // get messages
 router.get('/:convId', async (req, res, next) => {
   try {
