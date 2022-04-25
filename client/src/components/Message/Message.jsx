@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
+import { UserContext } from '../Context/Context';
 import styles from './Message.module.css';
 
-const Message = ({ httpService, message, messages, setMessages }) => {
+const Message = ({ httpService, message, messages, setMessages, own }) => {
   const [txtUserPic, setTxtUserPic] = useState('');
+  const { user } = useContext(UserContext);
+
+  useEffect(() => {}, []);
 
   useEffect(() => {
     const getTxtUserPic = async () => {
@@ -29,6 +33,7 @@ const Message = ({ httpService, message, messages, setMessages }) => {
       const newMessagesAfterDelete = messages.filter(
         (message) => message._id !== data._id
       );
+
       setMessages(newMessagesAfterDelete);
     } catch (error) {
       console.log(error);
@@ -36,16 +41,30 @@ const Message = ({ httpService, message, messages, setMessages }) => {
   };
 
   return (
-    <div className={styles.message}>
+    <div
+      className={
+        own ? styles.message : [styles.message, styles.otherMessage].join(' ')
+      }
+    >
       <div className={styles.messageTop}>
         <img
           className={styles.messageImg}
           src={txtUserPic}
           crossOrigin='anonymous'
         />
-        <p className={styles.messageText}>
+        <p
+          className={
+            own
+              ? styles.messageText
+              : [styles.messageText, styles.otherMessageText].join(' ')
+          }
+        >
           {message.text}
-          <span onClick={removeMessage}>x</span>
+          {message.senderId === user._id ? (
+            <span onClick={own && removeMessage}>x</span>
+          ) : (
+            ''
+          )}
         </p>
       </div>
       <div className={styles.messageBottom}>

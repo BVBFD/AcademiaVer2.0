@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import Topbar from '../../components/Topbar/Topbar';
 import Conversation from '../../components/Conversation/Conversation';
 import Message from '../../components/Message/Message';
 import styles from './Messenger.module.css';
 import { UserContext } from '../../components/Context/Context';
+import { io } from 'socket.io-client';
 
 const Messenger = ({ httpService }) => {
   const [convPartnerId, setConvPartnerId] = useState('');
@@ -11,6 +12,35 @@ const Messenger = ({ httpService }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const { user } = useContext(UserContext);
+  const socket = useRef();
+  const [socketUserData, setSocketUserData] = useState({});
+  const [socketPatnerData, setSocketPatnerData] = useState({});
+  const [arrivalMessage, setArrivalMessage] = useState();
+
+  useEffect(() => {
+    socket.current = io('ws://localhost:8900');
+    socket.current.emit('addUser', user._id);
+  }, []);
+
+  useEffect(() => {
+    socket.current.on('getUsers', (users) => {
+      const socketUser = users.filter((data) => data.userId === user._id);
+      setSocketUserData(socketUser);
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.current.on('getMessage', (data) => {
+      console.log(data.senderId, user._id);
+      if (data.senderId !== user._id) {
+        setArrivalMessage(data);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    arrivalMessage && setMessages([...messages, arrivalMessage]);
+  }, [arrivalMessage]);
 
   useEffect(() => {
     const getConv = async () => {
@@ -18,6 +48,11 @@ const Messenger = ({ httpService }) => {
         method: 'GET',
       });
       const data = await res.json();
+      socket.current.emit('addUser', convPartnerId);
+      socket.current.on('getUsers', (users) => {
+        const patner = users.filter((data) => data.userId !== user._id);
+        setSocketPatnerData(patner);
+      });
       setConvId(data[0]._id);
     };
 
@@ -35,11 +70,10 @@ const Messenger = ({ httpService }) => {
     };
 
     getMessages();
-  }, [convId]);
+  }, [convId, messages]);
 
   const addMessage = async (e) => {
     e.preventDefault();
-    console.log(newMessage);
 
     try {
       const res = await httpService.fetch(`api/messages`, {
@@ -53,6 +87,10 @@ const Messenger = ({ httpService }) => {
 
       const data = await res.json();
       setMessages([...messages, data]);
+      socket.current.emit('sendMessage', {
+        receiverId: socketPatnerData.socketId,
+        data,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -77,32 +115,45 @@ const Messenger = ({ httpService }) => {
           </div>
         </div>
 
-        <div className={styles.chatBox}>
-          <div className={styles.chatBoxWrapper}>
-            <div className={styles.chatBoxTop}>
-              <div>
-                {messages?.map((message) => (
-                  <Message
-                    httpService={httpService}
-                    message={message}
-                    messages={messages}
-                    setMessages={setMessages}
-                  />
-                ))}
+        {!convId ? (
+          <div className={styles.chatBox}>
+            <div className={styles.chatBoxWrapper}>
+              <div className={styles.chatBoxTop}>
+                <div className={styles.informClickPatner}>
+                  <p>Click to Chatting Patner Plz...</p>
+                </div>
               </div>
             </div>
-            <form className={styles.chatBoxBottom} onSubmit={addMessage}>
-              <textarea
-                className={styles.chatMessageInput}
-                placeholder='Write Something...'
-                onChange={(e) => setNewMessage(e.target.value)}
-              ></textarea>
-              <button type='submit' className={styles.chatSubmitButton}>
-                Send
-              </button>
-            </form>
           </div>
-        </div>
+        ) : (
+          <div className={styles.chatBox}>
+            <div className={styles.chatBoxWrapper}>
+              <div className={styles.chatBoxTop}>
+                <div>
+                  {messages.map((message) => (
+                    <Message
+                      own={message.senderId === user._id}
+                      httpService={httpService}
+                      message={message}
+                      messages={messages}
+                      setMessages={setMessages}
+                    />
+                  ))}
+                </div>
+              </div>
+              <form className={styles.chatBoxBottom} onSubmit={addMessage}>
+                <textarea
+                  className={styles.chatMessageInput}
+                  placeholder='Write Something...'
+                  onChange={(e) => setNewMessage(e.target.value)}
+                ></textarea>
+                <button type='submit' className={styles.chatSubmitButton}>
+                  Send
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

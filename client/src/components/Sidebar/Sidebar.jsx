@@ -11,6 +11,7 @@ import {
   Event,
   School,
 } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 
 const Sidebar = (props) => {
   return (
@@ -21,10 +22,12 @@ const Sidebar = (props) => {
             <RssFeed className={styles.sidebarIcon} />
             <span className={styles.sidebarListItemText}>Feed</span>
           </li>
-          <li className={styles.sidebarListItem}>
-            <Chat className={styles.sidebarIcon} />
-            <span className={styles.sidebarListItemText}>Chats</span>
-          </li>
+          <Link to={'/messenger'}>
+            <li className={styles.sidebarListItem}>
+              <Chat className={styles.sidebarIcon} />
+              <span className={styles.sidebarListItemText}>Chats</span>
+            </li>
+          </Link>
           <li className={styles.sidebarListItem}>
             <PlayCircleFilledOutlined className={styles.sidebarIcon} />
             <span className={styles.sidebarListItemText}>Videos</span>

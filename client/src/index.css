@@ -5,3 +5,8 @@
   transition: all 0.2s linear;
   font-family: 'Roboto', sans-serif;
 }
+
+a {
+  text-decoration: none;
+  color: black;
+}

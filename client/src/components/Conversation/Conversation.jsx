@@ -18,11 +18,10 @@ const Conversation = ({ httpService, setConvPartnerId }) => {
         method: 'GET',
       });
 
+      let data = await res.json();
       let newArray = [];
-      const data = await res.json();
-      data.forEach((data) => {
-        newArray.push(data.members[1]);
-      });
+      data[0].members.forEach((member) => newArray.push(member));
+      newArray = newArray.filter((member) => member !== user._id);
       setChatFriends(newArray);
     };
 
@@ -45,8 +44,6 @@ const Conversation = ({ httpService, setConvPartnerId }) => {
 
     getChatFriendsObject();
   }, [chatFriends]);
-
-  console.log(chatFriendsObjectList);
 
   return chatFriendsObjectList.map((friend) => (
     <div
